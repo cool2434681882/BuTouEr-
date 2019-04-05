@@ -1,5 +1,8 @@
 const fs = require('fs')
 const path = require('path')
+
+//读取静态文件
+
 module.exports = function (dirPath){
     // console.log(dirPath) //未执行
     return (req,res,next)=>{
