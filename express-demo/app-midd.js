@@ -10,7 +10,7 @@ const static = require('./middlwares/static')
 
 //纪录
 app.use(log())
-// app.use((req,res,next)=>{
+// app.use((req,res,next)=>{}
 //      const log = `${req.method}${req.url}${+new Date()}
 // `
 //     //  console.log(data)
@@ -18,6 +18,16 @@ app.use(log())
 //         if(err) return console.log('error')
 //     })
 //  })
+
+// app.use('/',function(req,res,next){
+//     try{
+//         const data = Json.parse('{abc')
+//         res.json(data)
+//     }catch(e){
+//         next(e)
+//     }
+// })
+
 
 // 读取静态文件
 app.use('/public',static(path.join(__dirname,'public')))
@@ -48,8 +58,26 @@ app.use('/public',static(path.join(__dirname,'public')))
 //         next()
 //     }
 // })
-
-
+app.use('/error',(req,res,next)=>{
+    fs.readFile('ddaa.fd',(err,data)=>{
+        if(err) next(err)
+    })
+})
+//全局错误处理
+app.use((err,req,res,next)=>{
+    const error_log=`
+=====================
+错误名: ${err.name}
+错误消息: ${err.message}
+错误堆栈: ${err.stack}
+错误时间: ${new Date()}
+=====================\n\n`
+    fs.appendFile('./err_log.txt',error_log,(err)=>{
+        // res.writeHead(500,{})
+        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+        res.end('500 服务器忙')
+    })
+})
 //404
 app.use((req,res,next)=>{
     res.end('404')

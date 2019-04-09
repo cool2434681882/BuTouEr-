@@ -6,7 +6,7 @@ const app = express()
 //中间件 任何请求都会执行,不会自动继续执行,通过next继续执行
 app.use(function(req,res,next){
     // 获取请求路径
-    // console.log(req.path)
+    console.log(req.path) // favicon.ico
     if(req.path.startsWith('/public/')){
         fs.readFile(`.${req.path}`,(err,data)=>{
             if(err) {
