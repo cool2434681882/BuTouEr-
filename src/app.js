@@ -2,6 +2,8 @@
 import express from 'express'//es6
 const app = express()
 
+
+
 //通用资源
 import config from './config'
 
@@ -20,13 +22,34 @@ nunjucks.configure(config.viewPath,{
     express: app    
 })
 
+//post表单处理中间件
+import postmidd from './middlwares/post.js'
+app.use(postmidd)
+// // 将post提交的数据转为对象
+// import querystring from 'querystring'
+// app.use((req,res,next)=>{
+//     //由于post提交的数据数据量大可能会多次提交
+//     //通过监听req的data对象的回调接受到所有数据
+//     let data = ''
+//     req.on('data',chunk=>{
+//         data += chunk
+//         // foo=var&a=b&c=d&e=f
+//     })
+//     req.on('end',()=>{
+//         data = querystring.parse(data)
+//         req.body = data
+//         next()
+//     })
+// })
+
+
+//route
+import router from './route.js'
+app.use(router)
 
 //配置bebal
 
-app.get('/',(req,res) => {
-    // res.end('hello!!!!')
-    res.render('index.html')
-})
+
 app.listen(3000,() => {
     console.log('runing in 3000')
 })

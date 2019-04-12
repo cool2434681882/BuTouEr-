@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>{{ foo }}</h1>
+    {% include "header.html" %}
+    <div class='sidebar'>
+        <h1>侧边栏</h1>
+    </div>
+    <h1>hello {{ foo }}</h1>
+    <footer>
+        <h1>底部</h1>
+    </footer>
 </body>
-</html>
+</html> -->
+{% block style %}
+<style>
+    body{
+        background-color: #fff;
+    }
+</style>
+{% endblock %}
+<!-- extends 相当于copy -->
+{% extends "layout.html" %}
+{% block body %}
+    <h1>hello {{ foo }}</h1>
+{% endblock %}
+{% block script %}
+<script>
+    console.log()
+</script>
+{% endblock %}

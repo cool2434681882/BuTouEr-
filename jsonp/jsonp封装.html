@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // jsonp({
+        //     url:'',
+        //     type:'',
+        //     data:'',
+        //     success:function(){}
+        // })
+    function jsonp(option){
+        var callbackName = 'JSONP_'+Math.random().toString().substr(2)
+        // window[callbackName] = option.success //以变量为属性
+        !window.callbacks && (window.callbacks = {}) //将属性添加到为callbacks的属性
+        window.callbacks[callbackName] = function(data){
+            option.success(data)
+            // 这里才可以输出script标签
+            // 变量提升，可访问script
+            document.body.removeChild(script)
+        }
+        var script = document.createElement('script')
+        option.url = option.url + '?callback=callbacks.' + callbackName
+        script.src = option.url
+        document.body.appendChild(script)
+    }
+    jsonp({
+        url:'http://127.0.0.1:3000/',
+        success:function(data){
+            console.log(data)
+        }
+    })
+    jsonp({
+        url:'http://127.0.0.1:3000/',
+        success:function(data){
+            console.log(222)
+        }
+    })
+    jsonp({
+        url:'http://127.0.0.1:3000/',
+        success:function(data){
+            console.log(3333)
+        }
+    })
+    </script>
+</body>
+</html>
