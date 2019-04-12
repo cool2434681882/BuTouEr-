@@ -23,8 +23,8 @@ nunjucks.configure(config.viewPath,{
 })
 
 //post表单处理中间件
-import postmidd from './middlwares/post.js'
-app.use(postmidd)
+import bodyParser from './middlwares/body-parser.js'
+app.use(bodyParser)
 // // 将post提交的数据转为对象
 // import querystring from 'querystring'
 // app.use((req,res,next)=>{
@@ -46,6 +46,10 @@ app.use(postmidd)
 //route
 import router from './route.js'
 app.use(router)
+
+// 全局错误处理函数
+import errLog from './middlwares/error-log.js'
+app.use(errLog)
 
 //配置bebal
 
