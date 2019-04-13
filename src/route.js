@@ -1,7 +1,7 @@
 import express from 'express'
-import { deflate } from 'zlib';
 import fs from 'fs';
 import errorLog from './middlwares/error-log';
+import Advert from './models/advert'
 
 const router = express.Router()
 
@@ -11,9 +11,7 @@ const router = express.Router()
 const MongoClient = require('mongodb').MongoClient
 const assert = require('assert')
 
-const url = 'mongodb://localhost:27017'
-const dbName = 'BuTouEr'
-
+const url = 'mongodb://localhost:27017/BuTouEr'
 
 // const dbName = 'test'
 
@@ -44,37 +42,71 @@ router.get('/advert/add',(req,res)=>{
 })
 
 router.post('/advert/add',(req,res,next)=>{
-    //字符串转换封装
-    res.sendJson = (obj)=>{
-        res.end(JSON.stringify(obj))
-    }
-    // res.end('') res.write() //只可以接受2进制和字符串
-    // res.end(JSON.stringify(req.body))
-    // res.sendJson(req.body)
-    // console.log(req.body)
+    const body = req.body
+    const advert = new Advert({
+        title: body.title,
+        image: body.image,
+        link: body.link,
+        start_time: body.start_time,
+        end_time: body.end_time,
+    })
 
-
-    MongoClient.connect(url,(err,client)=>{
-        // 跳到错误处理中间件
+    advert.save((err,result)=>{
         if(err) return next(err)
-        // assert.equal(null,err)
-        const db = client.db(dbName)
-    
-        db
-            .collection('adverts')
-            .insertOne(req.body,(err,result)=>{
-                if(err){
-                    throw err
-                }
-                console.log(result)
-                res.json({
-                    err_code: 0
-                })
+        res.json({
+            err_code: 0
         })
-    
-        client.close()
     })
 })
 
+router.get('/advert/list',(req,res,next)=>{
+    Advert.find((err,docs)=>{
+        if(err) return next(err)
+        res.json({
+            err_code: 0,
+            result: docs
+        })
+    })
+})
+
+//更新
+router.get('/advert/one/:advertId',(req,res,next)=>{ //路径参数
+    Advert.findById(req.params.advertId,(err,result)=>{
+        if(err) return next(err)
+        res.json({
+            err_code: 0,
+            result:result
+        })
+    })
+})
+router.post('/advert/edit',(req,res,next)=>{
+    Advert.findById(req.body.id,(err,advert)=>{
+        if(err) return next(err)
+        const body = req.body
+        advert.title = body.title
+        advert.image = body.image
+        advert.link = body.link
+        advert.start_time = body.start_time
+        advert.end_time = body.end_time
+        advert.last_modified = Date.now()
+
+        //如果内部有相同的id则直接更新原有的数据
+        advert.save((err,result)=>{
+            if(err) return next(err)
+            res.json({
+                err_code: 0
+            })
+        })
+    })
+})
+
+router.get('/advert/remove/:advertId',(req,res,next)=>{
+    Advert.remove({_id: req.params.advertId},err=>{
+        if(err) return next()
+        res.json({
+            err_code: 0
+        })
+    })
+})
 
 export default router
