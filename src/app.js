@@ -2,7 +2,12 @@
 import express from 'express'//es6
 const app = express()
 
-
+// 配置nunjucks 模板引擎
+import nunjucks from 'nunjucks'
+nunjucks.configure(config.viewPath,{
+    autoescape: true,
+    express: app    
+})
 
 //通用资源
 import config from './config'
@@ -10,17 +15,11 @@ import config from './config'
 //开放静态资源
 app.use('/node_modules',express.static(config.node_modules_path))
 app.use('/public',express.static(config.public_path))
-
 //配置模板ejs引擎
 // app.set('views',config.viewPath)
 // app.set('view engine', 'ejs')
 
-// 配置nunjucks 模板引擎
-import nunjucks from 'nunjucks'
-nunjucks.configure(config.viewPath,{
-    autoescape: true,
-    express: app    
-})
+
 
 //post表单处理中间件
 import bodyParser from './middlwares/body-parser.js'
@@ -44,8 +43,11 @@ app.use(bodyParser)
 
 
 //route
-import router from './route.js'
-app.use(router)
+import advertRouter from './routes/advert.js'
+import indexRouter from './routes/index.js'
+
+app.use(advertRouter)
+app.use(indexRouter)
 
 // 全局错误处理函数
 import errLog from './middlwares/error-log.js'

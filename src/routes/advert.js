@@ -1,30 +1,13 @@
 import express from 'express'
 import fs from 'fs';
-import errorLog from './middlwares/error-log';
-import Advert from './models/advert'
+// import errorLog from '../middlwares/error-log';
+import Advert from '../models/advert'
 
 const router = express.Router()
 
-//解析post请求数据
-
-//mongodb配置
-const MongoClient = require('mongodb').MongoClient
-const assert = require('assert')
-
-const url = 'mongodb://localhost:27017/BuTouEr'
-
-// const dbName = 'test'
-
 
 // router
-router.get('/',(req,res,next)=>{
-    fs.readFile("FFFF",(err,data)=>{
-        if(err){
-            return next(err)
-        }
-        res.render('index.html') //必须在函数内才不会执行
-    })
-})
+
 router.get('/err',(req,res,next)=>{
     try{
         JSON.parse('ddddd')
