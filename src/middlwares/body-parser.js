@@ -5,6 +5,13 @@ module.exports = (req,res,next)=>{
     if(!(req.method.toLowerCase() === 'post')){
         return next()
     }
+
+
+    // 有文件的表单不处理
+    // const contentType = req.headers['content-type'].split(';')[0] // multipart/form
+    const contentType = req.headers['content-type'].startsWith('multipart/form-data')
+    if(contentType) return next()
+
     // if(!req.headers['content-length']){
     //     next()
     // }

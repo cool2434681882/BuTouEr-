@@ -6,7 +6,8 @@ const app = express()
 import nunjucks from 'nunjucks'
 nunjucks.configure(config.viewPath,{
     autoescape: true,
-    express: app    
+    express: app,
+    noCache:true    
 })
 
 //通用资源
@@ -24,6 +25,7 @@ app.use('/public',express.static(config.public_path))
 //post表单处理中间件
 import bodyParser from './middlwares/body-parser.js'
 app.use(bodyParser)
+
 // // 将post提交的数据转为对象
 // import querystring from 'querystring'
 // app.use((req,res,next)=>{
