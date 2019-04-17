@@ -1,5 +1,10 @@
+import Advert from '../models/advert'
+
 export function showAdvertList(req,res,next){
-    res.render('advert_list.html')
+    Advert.find((err,adverts)=>{
+        if(err) return next(err)
+        res.render('advert_list.html',{ adverts })
+    })
 }
 
 export function showAdvertAdd(req,res,next){
