@@ -25,7 +25,8 @@ app.get('/',(req,res,next)=>{
 })
 app.post('/add',(req,res,next)=>{
     form.parse(req,(err,fields,files)=>{
-        console.log(files)
+        // console.log(files)
+        console.log(fields)
     })
 })
 

@@ -66,13 +66,15 @@
         </div>
         <!-- 分页 -->
         <ul class="pagination pull-right">
-            <li><a href="#">上一页</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">下一页</a></li>
+            <li><a href="/advert?page={{ page - 1 }}">上一页</a></li>
+            {% for item in range(0,totalPage) %}
+            {% if((item + 1) === page) %}
+            <li class="active"><a href="/advert?page={{ item + 1 }}">{{ item + 1 }}</a></li>
+            {% else %}
+            <li><a href="/advert?page={{ item + 1 }}">{{ item + 1 }}</a></li>
+            {% endif %}
+            {%- endfor %}
+            <li><a href="/advert?page={{ page + 1 }}">下一页</a></li>
         </ul>
     </div>
 </div>
