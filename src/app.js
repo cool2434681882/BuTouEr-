@@ -3,6 +3,7 @@ import express from 'express'//es6
 const app = express()
 
 // 配置nunjucks 模板引擎
+// 与art-template 冲突 {{}} 都识别
 import nunjucks from 'nunjucks'
 nunjucks.configure(config.viewPath,{
     autoescape: true,
@@ -61,4 +62,3 @@ app.use(errLog)
 app.listen(3000,() => {
     console.log('runing in 3000')
 })
-

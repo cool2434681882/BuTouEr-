@@ -22,8 +22,34 @@ router.get('/err',(req,res,next)=>{
         next(e)
     }
 })
-
+//获取总条数
 router.get('/advert',advertControllers.showAdvertList)
+router.get('/advert/count',(req,res,next)=>{
+    Advert.count((err,count)=>{
+        if(err) return next(err)
+        res.json({
+            err_code: 0,
+            result: count
+        })
+    })
+})
+//获取list数据
+router.get('/advert/list',(req,res,next)=>{
+    let { page,pageSize } = req.query
+    page = Number.parseInt(page)
+    pageSize = Number.parseInt(pageSize)
+    Advert
+        .find()
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .exec((err,docs)=>{
+            if(err) return next(err)
+            res.json({
+                err_code: 0,
+                result: docs
+            })
+        })
+})
 
 router.get('/advert/add',advertControllers.showAdvertAdd)
 
@@ -72,15 +98,6 @@ router.post('/advert/add',(req,res,next)=>{
 //     })
 // })
 
-router.get('/advert/list',(req,res,next)=>{
-    Advert.find((err,docs)=>{
-        if(err) return next(err)
-        res.json({
-            err_code: 0,
-            result: docs
-        })
-    })
-})
 
 //更新
 router.get('/advert/one/:advertId',(req,res,next)=>{ //路径参数

@@ -45,82 +45,48 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody id="tbody"></tbody>
+                <tbody>
+                    {% for item in adverts %}
+                    <tr>
+                        <td>1</td>
+                        <td>{{ item.title }}</td>
+                        <td><img src="/public/uploads/{{ item.image }}" style="width: 100px;" alt=""></td>
+                        <td>{{ item.link }}</td>
+                        <td>{{ item.start_time }}</td>
+                        <td>{{ item.start_time }}</td>
+                        <td>126</td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
+                            <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
-        <!-- // 分页 -->
-        <ul class="pagination pull-right" id="pagination"></ul>
     </div>
 </div>
 <!-- 客户端模板引擎art-template -->
 <script type="text/template" id="tp1">
-    <!-- nunjucks 也处理 -->
-    <% adverts.forEach(function(item,index){ %>
-    <tr>
-        <td><%= index + 1 %></td>
-        <td><%= item.title %></td>
-        <td><img src="/public/uploads/<%= item.image %>" style="width: 100px;" alt=""></td>
-        <td><%= item.link %></td>
-        <td><%= item.start_time %></td>
-        <td><%= item.start_time %></td>
-        <td>126</td>
-        <td>
-            <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-            <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-        </td>
-    </tr>
-    <% }) %>
-</script>
-<script type="text/template" id="tp2">
-    
+    <!-- // 分页 -->
+    <ul class="pagination pull-right">
+        <li><a href="/advert?page={{ page - 1 }}">上一页</a></li>
+        {{ for item in range(0,totalPage) }}
+        {% if((item + 1) === page) %}
+        <li class="active"><a href="/advert?page={{ item + 1 }}">{{ item + 1 }}</a></li>
+        {% else %}
+        <li><a href="/advert?page={{ item + 1 }}">{{ item + 1 }}</a></li>
+        {% endif %}
+        {%- endfor %}
+        <li><a href="/advert?page={{ page + 1 }}">下一页</a></li>
+    </ul>
 </script>
 {% endblock %}
 
 {% block script %}
 <script src="../node_modules/art-template/lib/template-web.js"></script>
-<script src="../node_modules/twbs-pagination//jquery.twbsPagination.js"></script>
 <script>
-    var pageSize = 5
-    $.ajax({
-        url: '/advert/count',
-        type: 'get',
-        success: function(data){
-            if(data.err_code === 0){
-                $('#pagination').twbsPagination({
-                    totalPages: Math.ceil(data.result / pageSize),
-                    visiblePages: 7,
-                    first: '<<',
-                    prev: '<',
-                    next: '>',
-                    last: '>>',
-                    onPageClick: function(event,page){
-                        loadData(page)
-                    }
-                })
-            } 
-        }
-    })
-    function loadData(page){
-        $.ajax({
-            url: 'advert/list',
-            type: 'get',
-            data:{
-                page:page,
-                pageSize: pageSize
-            },
-            dataType: 'json',
-            success: function(data){
-                // console.log(data)
-                if(data.err_code === 0){
-                    var htmlStr = template('tp1',{
-                        adverts: data.result
-                    })
-                    $("#tbody").html(htmlStr)
-                }
-            }
 
-        })
-    }
 </script>
 
 {% endblock %}
