@@ -8,6 +8,7 @@ import { basename } from 'path'
 import config from '../config'
 
 import * as advertControllers from '../controllers/advert'
+import { rejects } from 'assert';
 
 const router = express.Router()
 
@@ -53,34 +54,121 @@ router.get('/advert/list',(req,res,next)=>{
 
 router.get('/advert/add',advertControllers.showAdvertAdd)
 
+//练习版
 router.post('/advert/add',(req,res,next)=>{
-    const form = new formidable.IncomingForm() //处理带文件的post请求
-    form.uploadDir = config.uploadDir //文件保存的路径
-    form.keepExtensions = true //保持扩展名
-    form.parse(req,(err,fields,files)=>{
-        if(err) return next()
-        const body = fields
-        // console.log(fields)
-        // console.log(files) //同步提交会有问题
-        body.image = basename(files.image.path)
-        // console.log(basename(files.image.path))
-    
-        // 数据库
-        const advert = new Advert({
-            title: body.title,
-            image: body.image,
-            link: body.link,
-            start_time: body.start_time,
-            end_time: body.end_time,
+    function advertAdd(req){
+        return new Promise((resolve,reject)=>{
+            const form = new formidable.IncomingForm() //处理带文件的post请求
+            form.uploadDir = config.uploadDir //文件保存的路径
+            form.keepExtensions = true //保持扩展名
+            form.parse(req,(err,fields,files)=>{
+                if(err) reject(err)
+                resolve([fields,files])
+            })
         })
-        advert.save((err,result)=>{
-            if(err) return next(err)
+    }
+    advertAdd(req)
+        .then((result)=>{
+            const [fields,files] = result
+            const body = fields
+            // console.log(fields)
+            // console.log(files) //同步提交会有问题
+            body.image = basename(files.image.path)
+            // console.log(basename(files.image.path))
+            // 数据库
+            const advert = new Advert({
+                title: body.title,
+                image: body.image,
+                link: body.link,
+                start_time: body.start_time,
+                end_time: body.end_time,
+            })
+            return advert.save()
+        })
+        .then(()=>{
             res.json({
                 err_code: 0
             })
         })
-    })
+        .catch((err)=>{
+            next(err)
+        })
 })
+
+//正常版
+// router.post('/advert/add',(req,res,next)=>{
+//     const form = new formidable.IncomingForm() //处理带文件的post请求
+//     form.uploadDir = config.uploadDir //文件保存的路径
+//     form.keepExtensions = true //保持扩展名
+//     form.parse(req,(err,fields,files)=>{
+//         if(err) return next()
+//         const body = fields
+//         // console.log(fields)
+//         // console.log(files) //同步提交会有问题
+//         body.image = basename(files.image.path)
+//         // console.log(basename(files.image.path))
+    
+//         // 数据库
+//         const advert = new Advert({
+//             title: body.title,
+//             image: body.image,
+//             link: body.link,
+//             start_time: body.start_time,
+//             end_time: body.end_time,
+//         })
+//         advert.save((err,result)=>{
+//             if(err) return next(err)
+//             res.json({
+//                 err_code: 0
+//             })
+//         })
+//     })
+// })
+//promise版
+// router.post('/advert/add',(req,res,next)=>{
+//     pmFormidable(req)
+//     .then((result)=>{
+//         const [fields,files] = result
+//         const body = fields
+//         // console.log(fields)
+//         // console.log(files) //同步提交会有问题
+//         body.image = basename(files.image.path)
+//         // console.log(basename(files.image.path))
+    
+//         // 数据库
+//         const advert = new Advert({
+//             title: body.title,
+//             image: body.image,
+//             link: body.link,
+//             start_time: body.start_time,
+//             end_time: body.end_time,
+//         })
+//         return advert.save()
+//     })
+//     .then(()=>{
+//         res.json({
+//             err_code: 0
+//         })
+//     })
+//     .catch(err=>{
+//         next(err)
+//     })
+//     function pmFormidable(req){
+//         return new Promise((resolve,reject)=>{
+//             const form = new formidable.IncomingForm() //处理带文件的post请求
+//             form.uploadDir = config.uploadDir //文件保存的路径
+//             form.keepExtensions = true //保持扩展名
+//             form.parse(req,(err,fields,files)=>{
+//                 if(err) reject(err)
+//                 resolve([fields,files])
+//             })
+//         })
+//     }
+// })
+
+
+
+
 // router.post('/advert/add',(req,res,next)=>{
 //     const body = req.body
 //     const advert = new Advert({

@@ -8,11 +8,10 @@ const fs = require('fs')
 // })
 //Promise一经创建立即执行
 new Promise((resolve,reject)=>{
-    fs.readFile('./data/1.txt',(err,data)=>{
+    fs.readFile('./data/111.txt',(err,data)=>{
         if(err){
-            reject(err)
+            return reject(err)
         }
-        // console.log("1")
         resolve(data.toString())
     })
 })
@@ -22,20 +21,20 @@ new Promise((resolve,reject)=>{
     return new Promise((resolve,reject)=>{
         fs.readFile('./data/2.txt',(err,data)=>{
             if(err){
-                reject(err)
+                return reject(err)
             }
             resolve(data.toString())
         })
     })
 },()=>{
-    //reject
-    console.log('err1')
+    console.log("FFFF")
 })
 .then((data)=>{
     console.log(data)
     fs.readFile('./data/3.txt',(err,data)=>{
         console.log(data.toString())
     })
-},(err)=>{
-
+})
+.catch(err=>{
+    console.log("err")
 })
