@@ -8,9 +8,17 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _index = require('./routes/index.js');
+var _nunjucks = require('nunjucks');
+
+var _nunjucks2 = _interopRequireDefault(_nunjucks);
+
+var _index = require('./routes/index');
 
 var _index2 = _interopRequireDefault(_index);
+
+var _adverts = require('./routes/adverts');
+
+var _adverts2 = _interopRequireDefault(_adverts);
 
 var _err_log = require('./middlwares/err_log');
 
@@ -24,9 +32,18 @@ var app = (0, _express2.default)();
 app.use('/node_modules', _express2.default.static(_config2.default.node_modules_path));
 app.use('/public', _express2.default.static(_config2.default.public_path));
 
+// nunjuckse模板
+
+_nunjucks2.default.configure('views', {
+    autoescape: true,
+    express: app,
+    noCache: true
+});
+
 //route
 
 app.use(_index2.default);
+app.use(_adverts2.default);
 
 //全局错误处理
 
