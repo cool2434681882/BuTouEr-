@@ -1,10 +1,17 @@
 import express from 'express'
-import * as indexController from '../controllers/index' //加载所有暴露的函数
-
 const router = express.Router()
+//调试用
+import * as errController from '../controllers/err'
+router.get('/err',(req,res,next)=>{
+    errController.err()
+})
 
 
+import * as showControllers from '../controllers/index'
 router
-    .get('/',indexController.showIndex)
+    .get('/',showControllers.showIndex)
+    // .get('/user',showControllers.user)
+
+
 
 export default router

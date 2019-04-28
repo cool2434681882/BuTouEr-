@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-mongoose.connect('mongodb://localhost/BuTouEr',{ useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/BuTouErTwo',{ useNewUrlParser: true })
 
 const advertSchema = mongoose.Schema({
     title: {type: String, required: true},
